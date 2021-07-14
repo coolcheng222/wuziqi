@@ -1,4 +1,4 @@
-package com.sealll.dao;
+package com.sealll.service;
 
 import com.sealll.bean.Room;
 import org.apache.ibatis.annotations.MapKey;
@@ -7,9 +7,9 @@ import java.util.Map;
 
 /**
  * @author sealll
- * @time 2021/6/30 11:47
+ * @time 2021/7/6 20:33
  */
-public interface RoomDao {
+public interface RoomService {
     public boolean create(Room room);
 
     public void delete(Integer id);
@@ -23,5 +23,4 @@ public interface RoomDao {
 
     @MapKey("id")
     public Map<Integer,Room> selectAllWithUser();
-    
 }

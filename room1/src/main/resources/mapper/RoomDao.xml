@@ -3,7 +3,47 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sealll.dao.RoomDao">
+    <resultMap id="roomuser" type="com.sealll.bean.Room">
+        <id column="id" property="id"></id>
+        <result column="password"></result>
+        <collection property="uids" ofType="java.lang.Integer">
+            <result column="uid"></result>
+        </collection>
+    </resultMap>
     <select id="selectAll" resultType="com.sealll.bean.Room">
         select * from room;
+    </select>
+
+<!--    public boolean create(Room room);-->
+    <insert id="create">
+        insert into room
+        (id, password)
+        values(
+               #{id},#{password}
+              )
+    </insert>
+
+<!--    public void delete(Integer id);-->
+    <delete id="delete">
+        delete from room
+        where id=#{id}
+    </delete>
+
+<!--    public Room selectById(Integer id);-->
+    <select id="selectById" resultType="com.sealll.bean.Room">
+        select * from room
+        where id=#{id}
+    </select>
+
+<!--    public Room selectByIdWithUser(Integer id);-->
+    <select id="selectByIdWithUser" resultMap="roomuser">
+        select id,uid,password
+        from room inner join roomuser r on room.id = r.roomid
+        where room.id=#{id}
+    </select>
+<!--    public Map<Integer,Room> selectAllWithUser();-->
+    <select id="selectAllWithUser">
+        select id,uid,password
+        from room inner join roomuser r on room.id = r.roomid;
     </select>
 </mapper>

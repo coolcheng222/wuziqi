@@ -9,6 +9,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -24,6 +27,7 @@ import java.util.stream.Stream;
 @ComponentScan("com.sealll")
 @MapperScan("com.sealll.dao")
 @PropertySource("jdbc.properties")
+@EnableTransactionManagement
 public class SpringConfig2 {
     @Value("${username1}")
     private String username;
@@ -34,15 +38,20 @@ public class SpringConfig2 {
     @Value("${driver}")
     private String driver;
     @Bean
-    public DataSource dataSource() throws SQLException {
+    public DataSource dataSource() {
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setUsername(username);
         druidDataSource.setPassword(password);
         druidDataSource.setUrl(url);
         druidDataSource.setDriverClassName(driver);
         druidDataSource.setBreakAfterAcquireFailure(true);
-        druidDataSource.setFilters("config,stat");
         return druidDataSource;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(){
+        return new DataSourceTransactionManager(dataSource());
+
     }
 
     @Configuration

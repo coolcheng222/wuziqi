@@ -1,6 +1,5 @@
 package com.sealll;
 
-import com.sealll.config.SpringConfig1;
 import com.sealll.config.SpringConfig2;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
