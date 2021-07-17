@@ -2,10 +2,10 @@ import com.sealll.bean.Room;
 import com.sealll.config.SpringConfig2;
 import com.sealll.dao.RoomDao;
 import com.sealll.manager.impl.SimpleRoomManager;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -13,9 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author sealll
  * @time 2021/7/5 17:16
  */
-@ContextConfiguration(classes= SpringConfig2.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-//@WebAppConfiguration
+@SpringBootTest
 public class DaoTest {
     @Autowired
     private RoomDao roomDao;

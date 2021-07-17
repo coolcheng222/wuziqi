@@ -1,6 +1,10 @@
 package com.sealll.websocket;
 
 import com.sealll.bean.Msg;
+import com.sealll.config.SpringConfig2;
+import com.sealll.service.RoomService;
+import com.sealll.service.UserService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
@@ -22,6 +26,7 @@ public class RoomEndPoint {
     public static ConcurrentHashMap<String,RoomEndPoint> endPoints = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<String,Integer> nums = new ConcurrentHashMap<>();
     private Session session;
+
 
     @OnOpen
     public void onOpen(Session session, @PathParam("room-id") String rid, @PathParam("id") String id) throws IOException {

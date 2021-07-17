@@ -5,7 +5,9 @@ import com.sealll.config.SpringConfig2;
 import com.sealll.dao.UserDao;
 import com.sealll.manager.utils.TokenResolver;
 import com.sealll.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.util.UUID;
@@ -14,11 +16,11 @@ import java.util.UUID;
  * @author sealll
  * @time 2021/7/9 22:52
  */
+@Component
 public class SimpleTokenResolver implements TokenResolver {
+    @Autowired
     private UserService userService;
     public SimpleTokenResolver(){
-        AnnotationConfigApplicationContext ioc = new AnnotationConfigApplicationContext(SpringConfig2.class);
-        userService = ioc.getBean(UserService.class);
     }
     @Override
     public String getToken(Integer rid, Integer uid) {

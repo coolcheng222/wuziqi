@@ -7,18 +7,18 @@ import com.sealll.manager.exception.RoomNotExistException;
 import com.sealll.manager.utils.AuthenticResolver;
 import com.sealll.service.RoomService;
 import com.sealll.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  * @author sealll
  * @time 2021/7/9 23:49
  */
+@Component
 public class SimpleAuthenticResolver implements AuthenticResolver {
+    @Autowired
     private RoomService roomService;
-    public SimpleAuthenticResolver(){
-        AnnotationConfigApplicationContext ioc = new AnnotationConfigApplicationContext(SpringConfig2.class);
-        roomService = ioc.getBean(RoomService.class);
-    }
     @Override
     public Room getRoom(Integer rid) throws RoomNotExistException{
         Room room = roomService.selectById(rid);

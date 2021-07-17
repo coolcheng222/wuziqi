@@ -37,7 +37,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room selectById(Integer id) {
-        return selectById(id);
+        return roomDao.selectById(id);
     }
 
     @Override

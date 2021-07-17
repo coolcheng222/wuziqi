@@ -13,9 +13,14 @@ import com.sealll.manager.utils.impl.SimpleTimeCacheMap;
 import com.sealll.manager.utils.impl.SimpleTokenResolver;
 import com.sealll.service.RoomService;
 import com.sealll.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.UncategorizedSQLException;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,46 +30,43 @@ import java.util.Properties;
  * @author sealll
  * @time 2021/7/9 23:01
  */
+@Configuration
+@ConfigurationProperties(prefix = "room")
 public class SimpleRoomManager implements RoomManager {
-    private final Long TTL = 100000L;
 
+    @Autowired
+    private RoomService roomService;
+    @Autowired
+    private UserService userService;
+
+    @Autowired
     private RoomValidator roomValidator;
+    @Autowired
     private TokenResolver tokenResolver;
+    @Autowired
     private AuthenticResolver authenticResolver;
+    @Autowired
     private UidGenerator uidGenerator;
     //key == roomid
     private TimeCacheMap<Integer,User> userCacheMap;
     //key == roomid
     private TimeCacheMap<Integer,Room> roomCacheMap;
 
+    private Long TTL = 100000L;
     private Integer roomSize;
-    private RoomService roomService;
-    private UserService userService;
     private Integer roomMax;
+
+
     public SimpleRoomManager(){
-        AnnotationConfigApplicationContext ioc = new AnnotationConfigApplicationContext(SpringConfig2.class);
-        roomService = ioc.getBean(RoomService.class);
-        userService = ioc.getBean(UserService.class);
-        roomValidator = new SimpleRoomValidator();
-        tokenResolver = new SimpleTokenResolver();
-        authenticResolver = new SimpleAuthenticResolver();
         userCacheMap = new SimpleTimeCacheMap<>();
         roomCacheMap = new SimpleTimeCacheMap<>();
-
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream("application1.properties");
-        Properties pros = new Properties();
-        try {
-            pros.load(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        roomSize = Integer.parseInt((String) pros.get("room-size"));
-        roomMax = Integer.parseInt((String) pros.get("room-max"));
     }
     @Override
     public String createRoom(Integer rid, String password) {
+        System.out.println(roomMax);
         Room room1 = roomService.selectById(rid);
-        if(room1 == null){
+        Room room2 = roomCacheMap.get(rid);
+        if(room1 != null || room2 != null){
             return RoomConstants.ROOM_EXIST;
         }
         if(!canMoreRoom()){
@@ -87,27 +89,27 @@ public class SimpleRoomManager implements RoomManager {
         return uid.toString();
     }
 
-    private String createUser(Integer rid) {
-        try{
-            Integer uid = uidGenerator.getUid(rid);
-            if(uid != null){
-                User user = new User();
-                user.setRoomid(rid);
-                user.setUid(uid);
-                String token = tokenResolver.getToken(rid, uid);
-                user.setToken(token);
-                boolean user1 = userService.createUser(user);
-                return uid.toString();
-            }else{
-                System.out.println("??????????????");
-                return "???????????????";
-            }
-        }catch (DuplicateKeyException e){
-            return RoomConstants.ROOM_EXIST;
-        }catch (UncategorizedSQLException e){
-            return RoomConstants.ROOM_OUT_OF_NUM;
-        }
-    }
+//    private String createUser(Integer rid) {
+//        try{
+//            Integer uid = uidGenerator.getUid(rid);
+//            if(uid != null){
+//                User user = new User();
+//                user.setRoomid(rid);
+//                user.setUid(uid);
+//                String token = tokenResolver.getToken(rid, uid);
+//                user.setToken(token);
+//                boolean user1 = userService.createUser(user);
+//                return uid.toString();
+//            }else{
+//                System.out.println("??????????????");
+//                return "???????????????";
+//            }
+//        }catch (DuplicateKeyException e){
+//            return RoomConstants.ROOM_EXIST;
+//        }catch (UncategorizedSQLException e){
+//            return RoomConstants.ROOM_OUT_OF_NUM;
+//        }
+//    }
 
     @Override
     public boolean isRoomFilled(Integer rid) {
@@ -173,8 +175,22 @@ public class SimpleRoomManager implements RoomManager {
     }
 
     @Override
-    public Room checkRoomCache(Integer rid) {
-        return roomCacheMap.get(rid);
+    public void deleteRoom(Integer rid){
+        roomService.delete(rid);
+    }
+
+    @Override
+    public Room checkRoomCache(Integer rid,Integer uid) {
+        Room room = roomCacheMap.get(rid);
+        if(room == null){
+            return null;
+        }else{
+            if(room.getUids().contains(uid)){
+                return room;
+            }else{
+                return null;
+            }
+        }
     }
 
     @Override
@@ -183,8 +199,17 @@ public class SimpleRoomManager implements RoomManager {
     }
 
     @Override
-    public User checkUserCache(Integer rid) {
-        userCacheMap.get(rid);
+    public User checkUserCache(Integer rid,Integer uid) {
+        User user = userCacheMap.get(rid);
+        if(user == null){
+            return null;
+        }else{
+            if(user.getUid().equals(uid)){
+                return user;
+            }else{
+                return null;
+            }
+        }
     }
 
     @Override
@@ -222,6 +247,16 @@ public class SimpleRoomManager implements RoomManager {
     }
 
     @Override
+    public boolean createRoomDb(Room room) {
+        return roomService.create(room);
+    }
+
+    @Override
+    public boolean createUserDb(User user) {
+        return userService.createUser(user);
+    }
+
+    @Override
     public boolean canMoreRoom() {
         roomCacheMap.removeExpire();
         int size = roomCacheMap.size();
@@ -242,5 +277,29 @@ public class SimpleRoomManager implements RoomManager {
 
     public void setUidGenerator(UidGenerator uidGenerator) {
         this.uidGenerator = uidGenerator;
+    }
+
+    public Long getTTL() {
+        return TTL;
+    }
+
+    public void setTTL(Long TTL) {
+        this.TTL = TTL;
+    }
+
+    public Integer getRoomSize() {
+        return roomSize;
+    }
+
+    public void setRoomSize(Integer roomSize) {
+        this.roomSize = roomSize;
+    }
+
+    public Integer getRoomMax() {
+        return roomMax;
+    }
+
+    public void setRoomMax(Integer roomMax) {
+        this.roomMax = roomMax;
     }
 }

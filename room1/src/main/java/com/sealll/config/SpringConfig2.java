@@ -1,83 +1,58 @@
 package com.sealll.config;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.*;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.Arrays;
 
 /**
  * @author sealll
  * @time 2021/7/5 17:54
  */
 @Configuration
-@ComponentScan("com.sealll")
-@MapperScan("com.sealll.dao")
-@PropertySource("jdbc.properties")
 @EnableTransactionManagement
 public class SpringConfig2 {
-    @Value("${username1}")
-    private String username;
-    @Value("${password}")
-    private String password;
-    @Value("${url}")
-    private String url;
-    @Value("${driver}")
-    private String driver;
+//    @Bean
+    public FilterRegistrationBean filterRegistrationBean(){
+        return null;
+//        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<CorsFilter>(new CorsFilter());
+//        bean.setUrlPatterns(Arrays.asList("/*"));
+//        return bean;
+    }
     @Bean
-    public DataSource dataSource() {
-        DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setUsername(username);
-        druidDataSource.setPassword(password);
-        druidDataSource.setUrl(url);
-        druidDataSource.setDriverClassName(driver);
-        druidDataSource.setBreakAfterAcquireFailure(true);
-        return druidDataSource;
+    public CorsFilter corsFilter() {
+        //1.添加CORS配置信息
+        CorsConfiguration config = new CorsConfiguration();
+        //1) 允许通过的域,不要写*，否则cookie就无法使用了
+        config.addAllowedOrigin("http://127.0.0.1:63343");
+        config.addAllowedOrigin("http://localhost:63343");
+        //2) 是否发送Cookie信息
+        config.setAllowCredentials(true);
+        //3) 允许的请求方式
+        config.addAllowedMethod("OPTIONS");
+        config.addAllowedMethod("HEAD");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("PATCH");
+        // 4）允许的头信息
+        config.addAllowedHeader("*");
+        //2.添加映射路径，我们拦截一切请求
+        UrlBasedCorsConfigurationSource configSource = new
+                UrlBasedCorsConfigurationSource();
+        configSource.registerCorsConfiguration("/**", config);
+        //3.返回新的CorsFilter.
+        return new CorsFilter(configSource);
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(){
-        return new DataSourceTransactionManager(dataSource());
-
-    }
-
-    @Configuration
-    static class DataSourceConfig{
-
-        @Bean
-        @DependsOn("dataSource")
-        public SqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource){
-            SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-            sqlSessionFactoryBean.setDataSource(dataSource);
-            sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("mybatis.xml"));
-            ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
-
-            sqlSessionFactoryBean.setMapperLocations( Stream.of(Optional.ofNullable(new String[]{"classpath:mapper/*.xml"}).orElse(new String[0]))
-                    .flatMap(location -> {
-                        try {
-                            return Stream.of(resourceResolver.getResources(location));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }).toArray(Resource[]::new));
-            sqlSessionFactoryBean.setPlugins(
-
-            );
-            return sqlSessionFactoryBean;
-        }
+    public ServerEndpointExporter serverEndpointExporter(){
+        return new ServerEndpointExporter();
     }
 }
