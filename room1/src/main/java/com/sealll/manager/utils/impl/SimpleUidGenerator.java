@@ -24,10 +24,10 @@ public class SimpleUidGenerator implements UidGenerator {
         Integer res = 0;
         switch (room == null? 0:room.getUids().size()){
             case 0:
-                res = new Random().nextInt(32767);
+                res = new Random().nextInt(32767879);
                 break;
             case 1:
-                res = room.getUids().iterator().next() +  new Random().nextInt(3293);
+                res = room.getUids().iterator().next() +  new Random().nextInt(32937695);
                 break;
             case 2:
             default:

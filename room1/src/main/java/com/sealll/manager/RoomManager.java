@@ -18,6 +18,7 @@ public interface RoomManager {
     public boolean deRoom(Integer rid,Integer uid);
     public boolean deRoom(String token);
 
+    public User getByToken(String token);
     public Room checkRoomCache(Integer rid,Integer uid);
     public void removeRoomCache(Integer rid);
     public User checkUserCache(Integer rid,Integer uid);
@@ -27,8 +28,6 @@ public interface RoomManager {
     public String storeRoom(Room room);
     public String storeUser(User user);
 
-    public boolean createRoomDb(Room room);
-    public boolean createUserDb(User user);
     public void deleteRoom(Integer rid);
 
     public boolean canMoreRoom();

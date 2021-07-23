@@ -175,6 +175,12 @@ public class SimpleRoomManager implements RoomManager {
     }
 
     @Override
+    public User getByToken(String token) {
+        User byToken = tokenResolver.getByToken(token);
+        return byToken;
+    }
+
+    @Override
     public void deleteRoom(Integer rid){
         roomService.delete(rid);
     }
@@ -246,15 +252,6 @@ public class SimpleRoomManager implements RoomManager {
         }
     }
 
-    @Override
-    public boolean createRoomDb(Room room) {
-        return roomService.create(room);
-    }
-
-    @Override
-    public boolean createUserDb(User user) {
-        return userService.createUser(user);
-    }
 
     @Override
     public boolean canMoreRoom() {

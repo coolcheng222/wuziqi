@@ -1,12 +1,7 @@
 package com.sealll.websocket;
 
 import com.sealll.bean.Msg;
-import com.sealll.config.SpringConfig2;
-import com.sealll.service.RoomService;
-import com.sealll.service.UserService;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -14,7 +9,6 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author sealll
