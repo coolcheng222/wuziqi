@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/room")
-@CrossOrigin(origins = {"http://localhost:63343/"})
+@CrossOrigin(origins = {"http://localhost:8080/"})
 public class RoomController {
     @Autowired
     private RoomManager roomManager;

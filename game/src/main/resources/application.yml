@@ -1,0 +1,4 @@
+room-rpc:
+  host: localhost
+  port: 8081
+  schema: http
