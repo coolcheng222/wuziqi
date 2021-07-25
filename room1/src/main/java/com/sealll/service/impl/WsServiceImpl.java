@@ -3,6 +3,7 @@ package com.sealll.service.impl;
 import com.sealll.bean.Msg;
 import com.sealll.service.WsService;
 import com.sealll.websocket.ChessEndPoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,4 +31,5 @@ public class WsServiceImpl implements WsService {
             }
         }
     }
+
 }

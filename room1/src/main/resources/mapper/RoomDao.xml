@@ -44,6 +44,11 @@
 <!--    public Map<Integer,Room> selectAllWithUser();-->
     <select id="selectAllWithUser">
         select id,uid,password
-        from room inner join roomuser r on room.id = r.roomid;
+        from room inner join roomuser r on room.id = r.roomid
+    </select>
+
+<!--    public Set<Integer> selectIds();-->
+    <select id="selectIds" resultType="java.lang.Integer">
+        select id from room
     </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.sealll.rpc;
 
 import com.sealll.bean.Msg;
+import com.sealll.bean.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,7 @@ import java.net.URI;
  */
 @Service
 @ConfigurationProperties(prefix = "room-rpc")
-public class RoomRemoteService {
+public class RoomRemoteService implements RoomRemote{
     @Autowired
     private WebClient.Builder webClientBuilder;
 
@@ -77,8 +78,42 @@ public class RoomRemoteService {
         Mono<Msg> msgMono = build
                 .post()
                 .uri(baseUrl() + "/ws/other")
+                .bodyValue(msg)
                 .retrieve()
                 .bodyToMono(Msg.class);
         return msgMono.block();
+    }
+
+    public Msg create(Room room){
+        WebClient build = webClientBuilder.build();
+        Msg msg= build
+                .post()
+                .uri(baseUrl() + "/room/")
+                .bodyValue(room)
+                .retrieve()
+                .bodyToMono(Msg.class)
+                .block();
+        return msg;
+    }
+
+    public Msg enRoom(Room room){
+        WebClient build = webClientBuilder.build();
+        Msg msg = build.put()
+                .uri(baseUrl() + "/room")
+                .bodyValue(room)
+                .retrieve()
+                .bodyToMono(Msg.class)
+                .block();
+        return msg;
+    }
+
+    public Msg checkRooms(){
+        WebClient build = webClientBuilder.build();
+        Msg block = build.get()
+                .uri(baseUrl() + "/room/ids")
+                .retrieve()
+                .bodyToMono(Msg.class)
+                .block();
+        return block;
     }
 }

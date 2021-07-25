@@ -7,6 +7,7 @@ import com.sealll.manager.RoomManager;
 import com.sealll.websocket.encoder.MsgTextEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -28,17 +29,22 @@ import java.util.concurrent.Future;
 @Component
 public class ChessEndPoint {
     private Session sessionSelf;
-//    public static Map<User, Session> sessions =  new HashMap<>();
+//    public static Mapl<User, Session> sessions =  new HashMap<>();
     public static Map<User,ChessEndPoint> chessEndPointMap = new HashMap<>();
     private static RoomManager roomManager;
     private ApplicationContext ioc;
 
     private User user;
+    private static TaskScheduler taskScheduler;
     @Autowired
     private void setRoomManager(RoomManager roomManager){
         ChessEndPoint.roomManager = roomManager;
     }
 
+    @Autowired
+    private void setTaskScheduler(TaskScheduler taskScheduler){
+        ChessEndPoint.taskScheduler = taskScheduler;
+    }
 
     public ChessEndPoint(){
 
@@ -51,6 +57,26 @@ public class ChessEndPoint {
     public void open(Session session, @PathParam("rid")Integer rid, @PathParam("uid")Integer uid){
         System.out.println(roomManager);
         Room room = roomManager.checkRoomCache(rid,uid);
+
+        User user = new User();
+        user.setRoomid(rid);
+        user.setUid(uid);
+
+        sessionSelf = session;
+
+        if(chessEndPointMap.containsKey(user)){
+            if(chessEndPointMap.get(user).isOpen()){
+                try {
+                    session.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                chessEndPointMap.put(user,this);
+                return;
+            }
+        }
+
         User user1 = roomManager.checkUserCache(rid,uid);
         try {
             if(room == null && user1 == null){
@@ -67,16 +93,12 @@ public class ChessEndPoint {
             roomManager.storeRoom(room);
         }
 
-        User user = new User();
-        user.setRoomid(rid);
-        user.setUid(uid);
         String token = roomManager.generateToken(rid,uid);
         user.setToken(token);
         roomManager.storeUser(user);
         roomManager.removeRoomCache(rid);
         roomManager.removeUserCache(rid);
-        session.getAsyncRemote().sendObject(Msg.success().extend(token));
-        sessionSelf = session;
+        send(Msg.success().msg("token").extend(token));
         this.user = user;
         chessEndPointMap.put(user,this);
     }
@@ -87,23 +109,33 @@ public class ChessEndPoint {
 
     @OnClose
     public void close(Session session, @PathParam("rid")Integer rid, @PathParam("uid")Integer uid){
-        synchronized (ChessEndPoint.class) {
-            System.out.println(rid + " closing");
-            boolean roomFilled = roomManager.isRoomFilled(rid);
-            boolean b = roomManager.deRoom(rid, uid);
-            if (b && !roomFilled) {
-                roomManager.deleteRoom(rid);
+        User user = new User();
+        user.setRoomid(rid);
+        user.setUid(uid);
+        taskScheduler.scheduleWithFixedDelay(()->{
+            if(chessEndPointMap.get(user) == null || ChessEndPoint.this == chessEndPointMap.get(user)){
+                synchronized (ChessEndPoint.class) {
+                    System.out.println(rid + " closing");
+                    boolean roomFilled = roomManager.isRoomFilled(rid);
+                    boolean b = roomManager.deRoom(rid, uid);
+                    if (b && !roomFilled) {
+                        roomManager.deleteRoom(rid);
+                    }
+                    chessEndPointMap.remove(user);
+                }
             }
-            User user = new User();
-            user.setUid(uid);
-            user.setRoomid(rid);
-            chessEndPointMap.remove(user);
-        }
+
+        },12000);
+
     }
 
     public void send(Msg msg){
         sessionSelf.getAsyncRemote().sendObject(msg);
     }
+    public boolean isOpen(){
+        return sessionSelf.isOpen();
+    }
+
 
     public static List<ChessEndPoint> getRoom(Integer id){
         ArrayList<ChessEndPoint>  res = new ArrayList<>();
@@ -114,6 +146,14 @@ public class ChessEndPoint {
         }
         return res;
     }
+
+    public static void remove(Integer rid,Integer uid){
+        User user = new User();
+        user.setRoomid(rid);
+        user.setUid(uid);
+        chessEndPointMap.remove(user);
+    }
+
 
 
 

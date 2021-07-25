@@ -7,6 +7,8 @@ import com.sealll.manager.utils.RoomValidator;
 import com.sealll.manager.utils.TokenResolver;
 import com.sealll.manager.utils.UidGenerator;
 
+import java.util.Set;
+
 /**
  * @author sealll
  * @time 2021/7/9 13:10
@@ -31,5 +33,7 @@ public interface RoomManager {
     public void deleteRoom(Integer rid);
 
     public boolean canMoreRoom();
+
+    public Set<Integer> checkRooms();
 
 }

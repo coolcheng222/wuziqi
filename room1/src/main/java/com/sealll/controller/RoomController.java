@@ -8,6 +8,8 @@ import com.sealll.service.WsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 /**
  * @author sealll
  * @time 2021/7/15 21:40
@@ -42,4 +44,11 @@ public class RoomController {
             return Msg.fail().msg(s);
         }
     }
+
+    @GetMapping("/ids")
+    public Msg getRoomIds(){
+        Set<Integer> integers = roomManager.checkRooms();
+        return Msg.success().extend(integers);
+    }
+
 }

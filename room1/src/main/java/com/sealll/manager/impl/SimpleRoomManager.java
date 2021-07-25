@@ -25,6 +25,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author sealll
@@ -258,6 +260,14 @@ public class SimpleRoomManager implements RoomManager {
         roomCacheMap.removeExpire();
         int size = roomCacheMap.size();
         return roomService.selectAll().size() + size < roomMax;
+    }
+
+    @Override
+    public Set<Integer> checkRooms() {
+        ConcurrentHashMap.KeySetView<Integer, Room> integers = roomCacheMap.keySet();
+        Set<Integer> integers1 = roomService.selectIds();
+        integers1.addAll(integers);
+        return integers1;
     }
 
     public void setRoomValidator(RoomValidator roomValidator) {

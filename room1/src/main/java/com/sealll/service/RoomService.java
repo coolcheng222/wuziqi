@@ -4,6 +4,7 @@ import com.sealll.bean.Room;
 import org.apache.ibatis.annotations.MapKey;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author sealll
@@ -23,4 +24,6 @@ public interface RoomService {
 
     @MapKey("id")
     public Map<Integer,Room> selectAllWithUser();
+
+    public Set<Integer> selectIds();
 }

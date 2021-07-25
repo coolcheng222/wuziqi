@@ -3,10 +3,9 @@ package com.sealll.controller;
 import com.sealll.bean.Msg;
 import com.sealll.bean.User;
 import com.sealll.manager.RoomManager;
+import com.sealll.websocket.ChessEndPoint;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author sealll
@@ -25,5 +24,21 @@ public class UserController {
         }else{
             return Msg.success().extend(byToken);
         }
+    }
+
+    @PutMapping
+    public Msg delete(User user){
+        Integer rid = user.getRoomid();
+        Integer uid = user.getUid();
+        synchronized (UserController.class) {
+            System.out.println(rid + " closing");
+            boolean roomFilled = roomManager.isRoomFilled(rid);
+            boolean b = roomManager.deRoom(rid, uid);
+            if (b && !roomFilled) {
+                roomManager.deleteRoom(rid);
+            }
+            ChessEndPoint.remove(rid, uid);
+        }
+        return Msg.success();
     }
 }

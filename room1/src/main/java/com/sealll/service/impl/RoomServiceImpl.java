@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author sealll
@@ -48,5 +49,10 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Map<Integer, Room> selectAllWithUser() {
         return roomDao.selectAllWithUser();
+    }
+
+    @Override
+    public Set<Integer> selectIds() {
+        return roomDao.selectIds();
     }
 }
