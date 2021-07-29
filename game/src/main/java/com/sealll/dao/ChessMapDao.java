@@ -1,5 +1,7 @@
 package com.sealll.dao;
 
+import com.sealll.bean.ChessMap;
+
 import java.util.Set;
 
 /**
@@ -11,5 +13,5 @@ public interface ChessMapDao {
     public boolean setChess(Integer rid, Integer color,int x,int y);
     public boolean isWin(Integer rid, Integer color,int x,int y);
     public boolean isValidPoint(Integer rid, int x,int y);
-
+    public ChessMap getChessMap(Integer rid);
 }

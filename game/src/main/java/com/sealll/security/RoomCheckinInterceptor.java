@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 public class RoomCheckinInterceptor implements HandlerInterceptor {
     public static final String SESSION_ATTR = "session_token";
     public static final String HEADER_ATTR = "token";
+    public static final String REQUEST_ATTR = "user";
 
     @Autowired
     private RoomRemoteService roomRemoteService;
@@ -29,11 +30,11 @@ public class RoomCheckinInterceptor implements HandlerInterceptor {
         Object attribute = session.getAttribute(SESSION_ATTR);
         String header = request.getHeader(HEADER_ATTR);
         boolean res;
-
+        Msg check = null;
         if(attribute == null && header == null){
             res = false;
         }else if(attribute == null){
-            Msg check = roomRemoteService.check(header);
+            check = roomRemoteService.check(header);
             if(check.getErrno() == 0){
                 session.setAttribute(SESSION_ATTR,header);
                 res = true;
@@ -42,11 +43,12 @@ public class RoomCheckinInterceptor implements HandlerInterceptor {
                 res = false;
             }
         }else{
-            Msg check = roomRemoteService.check((String) attribute);
+            check = roomRemoteService.check((String) attribute);
             res = check.getErrno() == 0;
         }
 
         if(res){
+            request.setAttribute(REQUEST_ATTR,check.getExtend());
             return true;
         }else{
             response.getWriter().write(objectMapper.writeValueAsString(

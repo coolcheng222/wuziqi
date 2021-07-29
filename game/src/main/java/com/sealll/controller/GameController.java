@@ -3,12 +3,12 @@ package com.sealll.controller;
 import com.sealll.bean.Chess;
 import com.sealll.bean.Msg;
 import com.sealll.constants.ResultConstants;
+import com.sealll.security.RoomCheckinInterceptor;
 import com.sealll.service.GameSevice;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author sealll
@@ -50,5 +50,15 @@ public class GameController {
             return Msg.fail("游戏未开始");
         }
         return Msg.fail("网络异常");
+    }
+
+    @GetMapping("/check")
+    public Msg check(HttpServletRequest request){
+        Object attribute = request.getAttribute(RoomCheckinInterceptor.REQUEST_ATTR);
+        if(attribute == null){
+            return Msg.fail("");
+        }else{
+            return Msg.success(attribute);
+        }
     }
 }

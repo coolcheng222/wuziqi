@@ -270,6 +270,12 @@ public class SimpleRoomManager implements RoomManager {
         return integers1;
     }
 
+    @Override
+    public Room getRoomInfo(Integer rid) {
+        Room room = roomService.selectByIdWithUser(rid);
+        return room;
+    }
+
     public void setRoomValidator(RoomValidator roomValidator) {
         this.roomValidator = roomValidator;
     }

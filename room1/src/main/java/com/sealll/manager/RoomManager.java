@@ -35,5 +35,6 @@ public interface RoomManager {
     public boolean canMoreRoom();
 
     public Set<Integer> checkRooms();
+    public Room getRoomInfo(Integer rid);
 
 }

@@ -3,8 +3,11 @@ package com.sealll.controller;
 import com.sealll.bean.Msg;
 import com.sealll.bean.Room;
 import com.sealll.rpc.RoomRemoteService;
+import com.sealll.security.RoomCheckinInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author sealll
@@ -25,4 +28,6 @@ public class RoomController {
     public Msg enRoom(@RequestBody Room room){
         return roomRemoteService.enRoom(room);
     }
+
+
 }

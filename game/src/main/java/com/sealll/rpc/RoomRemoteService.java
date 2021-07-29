@@ -73,6 +73,17 @@ public class RoomRemoteService implements RoomRemote{
         return block;
     }
 
+    @Override
+    public Msg info(Integer rid) {
+        WebClient build = webClientBuilder.build();
+        Msg block = build.get()
+                .uri(baseUrl() + "/room/info?rid={rid}", rid)
+                .retrieve()
+                .bodyToMono(Msg.class)
+                .block();
+        return block;
+    }
+
     public Msg other(Msg msg){
         WebClient build = webClientBuilder.build();
         Mono<Msg> msgMono = build

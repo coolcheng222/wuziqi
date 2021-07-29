@@ -51,4 +51,14 @@ public class RoomController {
         return Msg.success().extend(integers);
     }
 
+    @GetMapping("/info")
+    public Msg getRoomInfo(Integer rid){
+        Room roomInfo = roomManager.getRoomInfo(rid);
+        if(roomInfo == null){
+            return Msg.fail();
+        }else{
+            return Msg.success().extend(roomInfo);
+        }
+    }
+
 }

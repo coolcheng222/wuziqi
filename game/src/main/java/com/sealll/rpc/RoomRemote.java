@@ -13,4 +13,5 @@ public interface RoomRemote {
     public Msg create(Room room);
     public Msg other(Msg msg);
     public Msg check(String token);
+    public Msg info(Integer rid);
 }

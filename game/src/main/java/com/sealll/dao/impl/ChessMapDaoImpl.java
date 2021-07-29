@@ -1,5 +1,7 @@
-package com.sealll.dao;
+package com.sealll.dao.impl;
 
+import com.sealll.bean.ChessMap;
+import com.sealll.dao.ChessMapDao;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -11,8 +13,8 @@ import java.util.Set;
  * @time 2021/7/24 20:56
  */
 @Repository
-public class ChessMapDaoImpl implements ChessMapDao{
-    private HashMap<Integer,ChessMap> chessMaps = new HashMap<>();
+public class ChessMapDaoImpl implements ChessMapDao {
+    private HashMap<Integer, ChessMap> chessMaps = new HashMap<>();
 
     public void deleteTtl(Set<Integer> ids){
         if(ids == null){
@@ -53,5 +55,10 @@ public class ChessMapDaoImpl implements ChessMapDao{
         }else{
             return false;
         }
+    }
+
+    @Override
+    public ChessMap getChessMap(Integer rid) {
+        return chessMaps.get(rid);
     }
 }

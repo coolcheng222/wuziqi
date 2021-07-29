@@ -1,19 +1,16 @@
 package com.sealll.service.impl;
 
-import com.sealll.bean.Chess;
 import com.sealll.bean.Msg;
 import com.sealll.constants.ResultConstants;
-import com.sealll.dao.ChessMap;
+import com.sealll.bean.ChessMap;
 import com.sealll.dao.ChessMapDao;
 import com.sealll.rpc.RoomRemote;
-import com.sealll.rpc.RoomRemoteService;
 import com.sealll.service.GameSevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Set;
 

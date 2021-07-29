@@ -1,6 +1,8 @@
-package com.sealll.dao;
+package com.sealll.bean;
 
 import org.springframework.stereotype.Repository;
+
+import java.util.Set;
 
 /**
  * @author sealll
