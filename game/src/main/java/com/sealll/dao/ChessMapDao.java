@@ -14,4 +14,8 @@ public interface ChessMapDao {
     public boolean isWin(Integer rid, Integer color,int x,int y);
     public boolean isValidPoint(Integer rid, int x,int y);
     public ChessMap getChessMap(Integer rid);
+
+    public boolean startGame(Integer rid);
+    public boolean endGame(Integer rid);
+    public boolean isStarted(Integer rid);
 }

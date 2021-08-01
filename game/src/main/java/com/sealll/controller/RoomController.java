@@ -29,5 +29,4 @@ public class RoomController {
         return roomRemoteService.enRoom(room);
     }
 
-
 }

@@ -5,7 +5,7 @@ package com.sealll.service;
  * @time 2021/6/19 18:54
  */
 public interface GameSevice {
-    public boolean startGame();
-    public String setChess(Integer color,int x, int y);
-    public boolean endGame();
+    public boolean startGame(Integer rid);
+    public String setChess(Integer rid,Integer color,int x, int y);
+    public boolean endGame(Integer rid);
 }

@@ -26,6 +26,10 @@ public class Msg {
         this.setExtend(extend);
         return this;
     }
+    public Msg message(String msg){
+        this.setMessage(msg);
+        return this;
+    }
 
     public Integer getErrno() {
         return errno;

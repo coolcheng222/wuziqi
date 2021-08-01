@@ -36,20 +36,17 @@ public class GameServiceImpl implements GameSevice {
     }
 
     @Override
-    public boolean startGame() {
-        if(isStarted()){
-            return false;
-        }
-        chessMap = new ChessMap();
-        return true;
+    public boolean startGame(Integer rid) {
+        boolean b = chessMapDao.startGame(rid);
+        return b;
     }
 
     @Override
-    public String setChess(Integer color, int x, int y) {
-        if(isStarted()){
-            boolean b = chessMap.setChess(color, x, y);
+    public String setChess(Integer rid,Integer color, int x, int y) {
+        if(isStarted(rid)){
+            boolean b = chessMapDao.setChess(rid,color, x, y);
             if(b){
-                if(chessMap.isWin(color,x,y)){
+                if(chessMapDao.isWin(rid,color,x,y)){
                     return ResultConstants.WIN;
                 }
                 return ResultConstants.SAFE;
@@ -63,18 +60,13 @@ public class GameServiceImpl implements GameSevice {
     }
 
     @Override
-    public boolean endGame() {
-        if(isStarted()){
-            chessMap = null;
-            return true;
-        }else{
-            return false;
-        }
-
+    public boolean endGame(Integer rid) {
+        boolean b = chessMapDao.endGame(rid);
+        return b;
     }
 
 
-    private boolean isStarted(){
-        return chessMap != null;
+    private boolean isStarted(Integer rid){
+        return chessMapDao.isStarted(rid);
     }
 }

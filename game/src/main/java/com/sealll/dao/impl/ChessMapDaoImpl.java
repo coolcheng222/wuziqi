@@ -61,4 +61,32 @@ public class ChessMapDaoImpl implements ChessMapDao {
     public ChessMap getChessMap(Integer rid) {
         return chessMaps.get(rid);
     }
+
+    @Override
+    public boolean startGame(Integer rid) {
+        ChessMap chessMap = chessMaps.get(rid);
+        if(chessMap == null){
+            chessMaps.put(rid,new ChessMap());
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public boolean endGame(Integer rid) {
+        ChessMap chessMap = chessMaps.get(rid);
+        if(chessMap == null){
+            return false;
+        }else{
+            chessMaps.remove(rid);
+            return true;
+        }
+    }
+
+    @Override
+    public boolean isStarted(Integer rid) {
+        ChessMap chessMap = chessMaps.get(rid);
+        return chessMap != null;
+    }
 }

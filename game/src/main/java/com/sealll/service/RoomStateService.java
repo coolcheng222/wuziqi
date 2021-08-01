@@ -1,17 +1,17 @@
-package com.sealll.dao;
+package com.sealll.service;
 
-import java.util.Set;
+import com.sealll.bean.RoomInfo;
+import com.sealll.bean.User;
 
 /**
  * @author sealll
- * @time 2021/7/29 14:58
+ * @time 2021/7/29 15:29
  */
-public interface RoomStateDao{
+public interface RoomStateService {
     public boolean togglePrepare(Integer rid,Integer uid);
     public boolean allPrepared(Integer rid);
 
     public void startGame(Integer rid);
     public void endGame(Integer rid);
     public boolean gameStarted(Integer rid);
-    public Set<Integer> getPreparedSet(Integer rid);
 }

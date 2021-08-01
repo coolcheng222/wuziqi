@@ -68,6 +68,15 @@ public class RoomStateDaoImpl implements RoomStateDao {
     }
 
     @Override
+    public boolean gameStarted(Integer rid) {
+        RoomState roomState = roomStateMap.get(rid);
+        if(roomState != null){
+            return roomState.isGameStarted();
+        }
+        return false;
+    }
+
+    @Override
     public Set<Integer> getPreparedSet(Integer rid) {
         RoomState roomState = roomStateMap.get(rid);
         if(roomState == null){

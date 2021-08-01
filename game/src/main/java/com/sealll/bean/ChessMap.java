@@ -20,7 +20,7 @@ public class ChessMap {
     }
 
     public boolean setChess(Integer color,int x,int y){
-        if(map[x][y] != 0){
+        if(map[x][y] == 0){
             map[x][y] = color;
             return true;
         }else{
