@@ -12,6 +12,14 @@ public class ChessMap {
     private int[][] map;
     private int size;
 
+    public int[][] getMap() {
+        return map;
+    }
+
+    public void setMap(int[][] map) {
+        this.map = map;
+    }
+
     public ChessMap(int size){
         map = new int[size][size];
     }
