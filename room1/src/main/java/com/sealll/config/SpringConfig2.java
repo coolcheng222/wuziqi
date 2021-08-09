@@ -29,10 +29,9 @@ public class SpringConfig2 {
         //1.添加CORS配置信息
         CorsConfiguration config = new CorsConfiguration();
         //1) 允许通过的域,不要写*，否则cookie就无法使用了
-        config.addAllowedOrigin("http://127.0.0.1:63343");
-        config.addAllowedOrigin("http://localhost:63343");
         config.addAllowedOrigin("http://localhost:8083");
         config.addAllowedOrigin("http://localhost:8083");
+        config.addAllowedOriginPattern("http://114.220.254.189:[0-9]{1,5}");
         //2) 是否发送Cookie信息
         config.setAllowCredentials(true);
         //3) 允许的请求方式

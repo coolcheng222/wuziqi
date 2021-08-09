@@ -66,6 +66,7 @@ public class SimpleRoomManager implements RoomManager {
     @Override
     public String createRoom(Integer rid, String password) {
         System.out.println(roomMax);
+        roomCacheMap.removeExpire();
         Room room1 = roomService.selectById(rid);
         Room room2 = roomCacheMap.get(rid);
         if(room1 != null || room2 != null){
@@ -257,7 +258,7 @@ public class SimpleRoomManager implements RoomManager {
 
     @Override
     public boolean canMoreRoom() {
-        roomCacheMap.removeExpire();
+
         int size = roomCacheMap.size();
         return roomService.selectAll().size() + size < roomMax;
     }
