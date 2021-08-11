@@ -15,10 +15,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Future;
 
 /**
@@ -112,7 +109,7 @@ public class ChessEndPoint {
         User user = new User();
         user.setRoomid(rid);
         user.setUid(uid);
-        taskScheduler.scheduleWithFixedDelay(()->{
+        taskScheduler.schedule(()->{
             if(chessEndPointMap.get(user) == null || ChessEndPoint.this == chessEndPointMap.get(user)){
                 synchronized (ChessEndPoint.class) {
                     System.out.println(rid + " closing");
@@ -125,7 +122,7 @@ public class ChessEndPoint {
                 }
             }
 
-        },12000);
+        },new Date(System.currentTimeMillis() + 12000));
 
     }
 

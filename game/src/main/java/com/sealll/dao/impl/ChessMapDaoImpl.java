@@ -2,6 +2,8 @@ package com.sealll.dao.impl;
 
 import com.sealll.bean.ChessMap;
 import com.sealll.dao.ChessMapDao;
+import com.sealll.dao.RoomStateDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -15,6 +17,8 @@ import java.util.Set;
 @Repository
 public class ChessMapDaoImpl implements ChessMapDao {
     private HashMap<Integer, ChessMap> chessMaps = new HashMap<>();
+    @Autowired
+    private RoomStateDao roomStateDao;
 
     public void deleteTtl(Set<Integer> ids){
         if(ids == null){
@@ -23,6 +27,7 @@ public class ChessMapDaoImpl implements ChessMapDao {
         Set<Integer> chess = new HashSet<>(chessMaps.keySet());
         chess.removeAll(ids);
         for(Integer i: chess){
+            roomStateDao.deleteRoom(i);
             chessMaps.remove(i);
         }
     }

@@ -2,7 +2,9 @@ package com.sealll.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sealll.bean.Msg;
+import com.sealll.bean.User;
 import com.sealll.rpc.RoomRemoteService;
+import org.graalvm.compiler.lir.LIRInstruction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -48,7 +50,8 @@ public class RoomCheckinInterceptor implements HandlerInterceptor {
         }
 
         if(res){
-            request.setAttribute(REQUEST_ATTR,check.getExtend());
+            String s = objectMapper.writeValueAsString(check.getExtend());
+            request.setAttribute(REQUEST_ATTR,objectMapper.readValue(s, User.class));
             return true;
         }else{
             response.getWriter().write(objectMapper.writeValueAsString(

@@ -50,6 +50,18 @@ public class RoomStateDaoImpl implements RoomStateDao {
     }
 
     @Override
+    public boolean createRoom(Integer rid) {
+        roomStateMap.put(rid,new RoomState());
+        return true;
+    }
+
+    @Override
+    public boolean deleteRoom(Integer rid) {
+        roomStateMap.remove(rid);
+        return true;
+    }
+
+    @Override
     public void startGame(Integer rid) {
         RoomState roomState = roomStateMap.get(rid);
         if(roomState == null){
@@ -85,6 +97,7 @@ public class RoomStateDaoImpl implements RoomStateDao {
             return roomState.getPrepared();
         }
     }
+
 
 
 }

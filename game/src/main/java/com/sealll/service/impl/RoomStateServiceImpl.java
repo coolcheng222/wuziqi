@@ -27,6 +27,16 @@ public class RoomStateServiceImpl implements RoomStateService {
     }
 
     @Override
+    public boolean createRoom(Integer rid) {
+        return roomStateDao.createRoom(rid);
+    }
+
+    @Override
+    public boolean deleteRoom(Integer rid) {
+        return roomStateDao.deleteRoom(rid);
+    }
+
+    @Override
     public void startGame(Integer rid) {
         roomStateDao.startGame(rid);
     }

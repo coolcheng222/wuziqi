@@ -4,6 +4,7 @@ import com.sealll.bean.Msg;
 import com.sealll.bean.Room;
 import com.sealll.rpc.RoomRemoteService;
 import com.sealll.security.RoomCheckinInterceptor;
+import com.sealll.service.RoomStateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 public class RoomController {
     @Autowired
     private RoomRemoteService roomRemoteService;
+    @Autowired
+    private RoomStateService roomStateService;
     @PostMapping
     public Msg create(@RequestBody Room room){
         Msg msg = roomRemoteService.create(room);
+        roomStateService.createRoom(room.getId());
         return msg;
     }
 

@@ -6,12 +6,15 @@ import com.sealll.bean.ChessMap;
 import com.sealll.dao.ChessMapDao;
 import com.sealll.rpc.RoomRemote;
 import com.sealll.service.GameSevice;
+import com.sealll.service.RoomStateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -30,9 +33,10 @@ public class GameServiceImpl implements GameSevice {
     @Scheduled(cron = "5 */10 * * * *")
     public void deleteTtl(){
         Msg msg = roomRemote.checkRooms();
-        Set<Integer> extend = (Set<Integer>) msg.getExtend();
+        Collection<Integer> extend = (Collection<Integer>) msg.getExtend();
+
         logger.info(extend.toString());
-        chessMapDao.deleteTtl(extend);
+        chessMapDao.deleteTtl(new HashSet<>(extend));
     }
 
     @Override

@@ -26,7 +26,7 @@ public class UserController {
         }
     }
 
-    @PutMapping
+    @DeleteMapping
     public Msg delete(User user){
         Integer rid = user.getRoomid();
         Integer uid = user.getUid();

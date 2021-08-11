@@ -10,6 +10,9 @@ public interface RoomStateDao{
     public boolean togglePrepare(Integer rid,Integer uid);
     public boolean allPrepared(Integer rid);
 
+    public boolean createRoom(Integer rid);
+    public boolean deleteRoom(Integer rid);
+
     public void startGame(Integer rid);
     public void endGame(Integer rid);
     public boolean gameStarted(Integer rid);

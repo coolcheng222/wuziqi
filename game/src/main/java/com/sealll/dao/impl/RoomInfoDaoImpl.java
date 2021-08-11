@@ -1,5 +1,7 @@
 package com.sealll.dao.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sealll.bean.*;
 import com.sealll.dao.ChessMapDao;
 import com.sealll.dao.RoomInfoDao;
@@ -23,6 +25,8 @@ public class RoomInfoDaoImpl implements RoomInfoDao {
     private ChessMapDao chessMapDao;
     @Autowired
     private RoomStateDao roomStateDao;
+    @Autowired
+    ObjectMapper objectMapper;
     @Override
     public RoomInfo getRoomInfo(User user) {
         Msg info = roomRemote.info(user.getRoomid());
@@ -30,7 +34,20 @@ public class RoomInfoDaoImpl implements RoomInfoDao {
             return null;
         }else{
             RoomInfo roomInfo = new RoomInfo();
-            Set<Integer> uids = ((Room) (info.getExtend())).getUids();
+            Object extend = info.getExtend();
+            String s = null;
+            try {
+                s = objectMapper.writeValueAsString(extend);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            Room room = null;
+            try {
+                room = objectMapper.readValue(s, Room.class);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            Set<Integer> uids = room.getUids();
             Integer uid = null;
             for (Integer integer : uids) {
                 if(!integer.equals(user.getUid())){
@@ -39,6 +56,9 @@ public class RoomInfoDaoImpl implements RoomInfoDao {
                 }
             }
             Set<Integer> preparedSet = roomStateDao.getPreparedSet(user.getRoomid());
+            if(preparedSet == null){
+                throw new RuntimeException("房间竟然不存在?");
+            }
             if(uid != null && preparedSet.contains(uid)){
                 roomInfo.setOtherPrepared(true);
             }
