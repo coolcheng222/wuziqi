@@ -116,10 +116,14 @@ public class SimpleRoomManager implements RoomManager {
 
     @Override
     public boolean isRoomFilled(Integer rid) {
-        userCacheMap.removeExpire();
-        User user = userCacheMap.get(rid);
-        return (user == null? 0: 1) + roomService.selectByIdWithUser(rid).getUids().size() >= roomSize;
-    }
+        try{
+            userCacheMap.removeExpire();
+            User user = userCacheMap.get(rid);
+            return (user == null? 0: 1) + roomService.selectByIdWithUser(rid).getUids().size() >= roomSize;
+        }catch(Exception e){
+            return true;
+        }
+       }
 
     @Override
     public String enRoom(Integer rid, String password) {
