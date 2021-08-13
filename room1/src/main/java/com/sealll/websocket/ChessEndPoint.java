@@ -122,7 +122,7 @@ public class ChessEndPoint {
                 }
             }
 
-        },new Date(System.currentTimeMillis() + 12000));
+        },new Date(System.currentTimeMillis() + 3000));
 
     }
 

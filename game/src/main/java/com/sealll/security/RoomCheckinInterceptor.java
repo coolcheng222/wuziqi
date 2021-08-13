@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
  * @time 2021/7/23 15:36
  */
 public class RoomCheckinInterceptor implements HandlerInterceptor {
-    public static final String SESSION_ATTR = "session_token";
+    public static final String SESSION_ATTR = "session_room_token";
     public static final String HEADER_ATTR = "token";
     public static final String REQUEST_ATTR = "user";
 
@@ -29,23 +29,23 @@ public class RoomCheckinInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
-        Object attribute = session.getAttribute(SESSION_ATTR);
-        String header = request.getHeader(HEADER_ATTR);
+        Object sessAttr = session.getAttribute(SESSION_ATTR);
+        String headerAttr = request.getHeader(HEADER_ATTR);
         boolean res;
         Msg check = null;
-        if(attribute == null && header == null){
+        if(sessAttr == null && headerAttr == null){
             res = false;
-        }else if(attribute == null){
-            check = roomRemoteService.check(header);
+        }else if(headerAttr != null){
+            check = roomRemoteService.check(headerAttr);
             if(check.getErrno() == 0){
-                session.setAttribute(SESSION_ATTR,header);
+                session.setAttribute(SESSION_ATTR,headerAttr);
                 res = true;
             }else{
 
                 res = false;
             }
         }else{
-            check = roomRemoteService.check((String) attribute);
+            check = roomRemoteService.check((String) sessAttr);
             res = check.getErrno() == 0;
         }
 

@@ -48,4 +48,13 @@ public class User extends ExpireEntity{
     public int hashCode() {
         return Objects.hash(roomid, uid);
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "roomid=" + roomid +
+                ", uid=" + uid +
+                ", token='" + token + '\'' +
+                '}';
+    }
 }

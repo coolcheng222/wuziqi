@@ -13,6 +13,8 @@ import com.sealll.manager.utils.impl.SimpleTimeCacheMap;
 import com.sealll.manager.utils.impl.SimpleTokenResolver;
 import com.sealll.service.RoomService;
 import com.sealll.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -35,6 +37,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Configuration
 @ConfigurationProperties(prefix = "room")
 public class SimpleRoomManager implements RoomManager {
+
+    private Logger logger = LoggerFactory.getLogger(SimpleRoomManager.class);
 
     @Autowired
     private RoomService roomService;
@@ -119,8 +123,10 @@ public class SimpleRoomManager implements RoomManager {
         try{
             userCacheMap.removeExpire();
             User user = userCacheMap.get(rid);
+            logger.debug(user == null? "user is null":user.toString());
             return (user == null? 0: 1) + roomService.selectByIdWithUser(rid).getUids().size() >= roomSize;
         }catch(Exception e){
+            e.printStackTrace();
             return true;
         }
        }

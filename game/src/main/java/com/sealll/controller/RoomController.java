@@ -24,7 +24,9 @@ public class RoomController {
     @PostMapping
     public Msg create(@RequestBody Room room){
         Msg msg = roomRemoteService.create(room);
-        roomStateService.createRoom(room.getId());
+        if(msg.getErrno() == 0){
+            roomStateService.createRoom(room.getId());
+        }
         return msg;
     }
 
