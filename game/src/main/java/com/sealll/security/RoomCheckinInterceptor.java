@@ -29,13 +29,13 @@ public class RoomCheckinInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
-        Object sessAttr = session.getAttribute(SESSION_ATTR);
+        String sessAttr = (String)session.getAttribute(SESSION_ATTR);
         String headerAttr = request.getHeader(HEADER_ATTR);
         boolean res;
         Msg check = null;
-        if(sessAttr == null && headerAttr == null){
+        if(isEmpty(sessAttr) && isEmpty(headerAttr)){
             res = false;
-        }else if(headerAttr != null){
+        }else if(!isEmpty(headerAttr)){
             check = roomRemoteService.check(headerAttr);
             if(check.getErrno() == 0){
                 session.setAttribute(SESSION_ATTR,headerAttr);
@@ -59,6 +59,10 @@ public class RoomCheckinInterceptor implements HandlerInterceptor {
             ));
             return false;
         }
+    }
+
+    private boolean isEmpty(String s){
+        return s == null || s.length() == 0;
     }
 
 

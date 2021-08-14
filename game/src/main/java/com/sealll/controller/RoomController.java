@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author sealll
@@ -35,4 +36,10 @@ public class RoomController {
         return roomRemoteService.enRoom(room);
     }
 
+    @DeleteMapping
+    public Msg deRoom(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.removeAttribute(RoomCheckinInterceptor.SESSION_ATTR);
+        return Msg.success("");
+    }
 }

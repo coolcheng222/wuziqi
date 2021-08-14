@@ -8,6 +8,8 @@ import com.sealll.service.WsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Set;
 
 /**
@@ -60,5 +62,6 @@ public class RoomController {
             return Msg.success().extend(roomInfo);
         }
     }
+
 
 }
